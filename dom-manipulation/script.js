@@ -152,7 +152,7 @@ async function fetchQuotesFromServer() {
     const serverQuotes = await response.json();
     return serverQuotes.map(quote => ({
       text: quote.title,
-      category: 'Server Quotes'
+      category: 'Quotes synced with server!'
     }));
   } catch (error) {
     console.error('Error fetching quotes from server:', error);
