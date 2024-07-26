@@ -7,24 +7,24 @@ document.addEventListener("DOMContentLoaded",()=>{
   // quotes array
   let quotes = [
     {
-      text : "To live is the rarest thing in the world. Most people exist, that is all.",
-      category : "Oscar Wilde"
+      text : "Keep your eyes on the stars, and your feet on the ground.",
+      category : "Motivational Quotes"
     },
     {
-      text : "That it will never come again is what makes life so sweet.",
-      category : "Emily Dickinson"
+      text : "The key is to keep company only with people who uplift you, whose presence calls forth your best.",
+      category : "Motivational Quotes"
     },
     {
-      text : "It is never too late to be what you might have been.",
-      category : "George Eliot"
+      text : "What you do today can improve all your tomorrows.",
+      category : "Motivational Quotes"
     },
     {
-      text : "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.",
-      category : "Ralph Waldo Emerson"
+      text : "We do not remember days, we remember moments.",
+      category : "Life Quotes"
     },
     {
-      text : "Don't let your happiness depend on something you may lose.",
-      category : "C.S. Lewis"
+      text : "Do not take life too seriously. You will never get out of it alive.",
+      category : "Funny Quotes"
     }
   ];
 
