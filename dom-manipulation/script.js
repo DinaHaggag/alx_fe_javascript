@@ -225,5 +225,93 @@ async function syncQuotesWithNotification() {
 
 setInterval(syncQuotesWithNotification, 30000); // Sync every 30 seconds with conflict notification
 
+// Implement JavaScript for Manual Conflict Resolution
+// Fetch elements
+const conflictNotification = document.getElementById('conflictNotification');
+const conflictResolutionUI = document.getElementById('conflictResolution');
+const conflictList = document.getElementById('conflictList');
+
+let conflictResolutions = [];
+
+// Show conflict resolution UI
+function showConflictResolutionUI() {
+  conflictResolutionUI.style.display = 'block';
+  conflictNotification.style.display = 'none';
+
+  conflictResolutions.forEach(conflict => {
+    let listItem = document.createElement('li');
+    listItem.innerHTML = `
+      <p>Quote: ${conflict.local.text}</p>
+      <p>Category: ${conflict.local.category}</p>
+      <button onclick="resolveConflict(${conflict.id}, 'local')">Keep Local</button>
+      <button onclick="resolveConflict(${conflict.id}, 'server')">Use Server</button>
+    `;
+    conflictList.appendChild(listItem);
+  });
+}
+
+// Resolve a specific conflict
+function resolveConflict(conflictId, choice) {
+  const conflict = conflictResolutions.find(conflict => conflict.id === conflictId);
+  conflict.choice = choice;
+}
+
+// Apply conflict resolutions
+function applyConflictResolutions() {
+  const localQuotes = getQuotes();
+
+  conflictResolutions.forEach(conflict => {
+    if (conflict.choice === 'server') {
+      // Update local storage with server data
+      const index = localQuotes.findIndex(quote => quote.text === conflict.local.text && quote.category === conflict.local.category);
+      if (index !== -1) {
+        localQuotes[index] = conflict.server;
+      } else {
+        localQuotes.push(conflict.server);
+      }
+    }
+  });
+
+  updateQuotes(localQuotes);
+  conflictResolutionUI.style.display = 'none';
+}
+
+// Sync quotes with conflict detection
+async function syncQuotesWithNotification() {
+  const serverQuotes = await fetchQuotesFromServer();
+  const localQuotes = getQuotes();
+
+  // Detect conflicts
+  conflictResolutions = detectConflicts(serverQuotes, localQuotes);
+
+  if (conflictResolutions.length > 0) {
+    conflictNotification.style.display = 'block';
+  } else {
+    const mergedQuotes = mergeQuotes(serverQuotes, localQuotes);
+    updateQuotes(mergedQuotes);
+  }
+}
+
+function detectConflicts(serverQuotes, localQuotes) {
+  const conflicts = [];
+
+  serverQuotes.forEach(serverQuote => {
+    const localQuote = localQuotes.find(localQuote => localQuote.text === serverQuote.text);
+    if (localQuote && (localQuote.category !== serverQuote.category)) {
+      conflicts.push({
+        id: conflicts.length,
+        local: localQuote,
+        server: serverQuote,
+        choice: null
+      });
+    }
+  });
+
+  return conflicts;
+}
+
+// Setup periodic sync
+setInterval(syncQuotesWithNotification, 30000); // Sync every 30 seconds with conflict notification
+
 
 })
