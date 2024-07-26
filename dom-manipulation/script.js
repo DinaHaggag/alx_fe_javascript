@@ -29,12 +29,12 @@ document.addEventListener("DOMContentLoaded",()=>{
   ];
 
   // add random quote
-  newRandomQuote.addEventListener("click", displayRandomQuote );
+  newRandomQuote.addEventListener("click",showRandomQuote);
 
-  function  displayRandomQuote  (){
+  function showRandomQuote (){
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const randomQuote = quotes[randomIndex];
-    quoteDisplay.textContent = `${randomQuote.text} - ${randomQuote.category}`;
+    quoteDisplay.innerHTML = `${randomQuote.text} - ${randomQuote.category}`;
     let quoteText = quoteDisplay.textContent;
     sessionStorage.setItem('lastViewedQuote', quoteText);
   }
