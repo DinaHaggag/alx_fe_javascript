@@ -143,4 +143,87 @@ document.addEventListener("DOMContentLoaded",()=>{
   populateCategories();
   filterQuotes();
 
+  // Fetching data from the server
+  const SERVER_URL = 'https://jsonplaceholder.typicode.com/posts'; // Replace with the actual server URL
+
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const serverQuotes = await response.json();
+    return serverQuotes.map(quote => ({
+      text: quote.title,
+      category: 'Server Quotes'
+    }));
+  } catch (error) {
+    console.error('Error fetching quotes from server:', error);
+  }
+}
+
+// Posting data to the server
+async function postQuoteToServer(quote) {
+  try {
+    await fetch(SERVER_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: quote.text,
+        body: quote.category,
+        userId: 1
+      })
+    });
+  } catch (error) {
+    console.error('Error posting quote to server:', error);
+  }
+}
+
+// Syncing data
+async function syncQuotes() {
+  const serverQuotes = await fetchQuotesFromServer();
+  const localQuotes = getQuotes();
+
+  const mergedQuotes = mergeQuotes(serverQuotes, localQuotes);
+  updateQuotes(mergedQuotes);
+}
+
+function mergeQuotes(serverQuotes, localQuotes) {
+  // Merge server quotes and local quotes, giving precedence to server quotes in case of conflict
+  const quoteMap = {};
+
+  serverQuotes.forEach(quote => {
+    quoteMap[quote.text] = quote;
+  });
+
+  localQuotes.forEach(quote => {
+    if (!quoteMap[quote.text]) {
+      quoteMap[quote.text] = quote;
+    }
+  });
+
+  return Object.values(quoteMap);
+}
+
+// Setting up periodic sync
+setInterval(syncQuotes, 30000); // Sync every 30 seconds
+
+// Handling conflicts
+function notifyConflictResolution() {
+  alert('Data has been updated from the server. Conflicts have been resolved.');
+}
+
+async function syncQuotesWithNotification() {
+  const serverQuotes = await fetchQuotesFromServer();
+  const localQuotes = getQuotes();
+
+  if (JSON.stringify(serverQuotes) !== JSON.stringify(localQuotes)) {
+    const mergedQuotes = mergeQuotes(serverQuotes, localQuotes);
+    updateQuotes(mergedQuotes);
+    notifyConflictResolution();
+  }
+}
+
+setInterval(syncQuotesWithNotification, 30000); // Sync every 30 seconds with conflict notification
+
+
 })
