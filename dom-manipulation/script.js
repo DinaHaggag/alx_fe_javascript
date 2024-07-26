@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       newQuoteText.value = '';
       newQuoteCategory.value = '';
       updateQuotes(quotes);
-      console.log(quotes);
+      populateCategoryFilter();
     }
   }
 
@@ -116,4 +116,31 @@ document.addEventListener("DOMContentLoaded",()=>{
     };
     fileReader.readAsText(event.target.files[0]);
   }
+
+  // Creating a Dynamic Content Filtering System Using Web Storage and JSON
+  const categoryFilter = document.getElementById("categoryFilter");
+
+  // Populate category filter
+  function populateCategoryFilter() {
+    const categories = [...new Set(quotes.map(quote => quote.category))];
+    categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+    categories.forEach(category => {
+      const option = document.createElement('option');
+      option.value = category;
+      option.textContent = category;
+      categoryFilter.appendChild(option);
+    });
+  }
+
+  // Filter quotes based on selected category
+  function filterQuotes() {
+    const selectedCategory = categoryFilter.value;
+    const filteredQuotes = selectedCategory === "all" ? quotes : quotes.filter(quote => quote.category === selectedCategory);
+    displayQuotes(filteredQuotes);
+  }
+
+  // Initialize category filter and display all quotes
+  populateCategoryFilter();
+  filterQuotes();
+
 })
