@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded",()=>{
       newQuoteText.value = '';
       newQuoteCategory.value = '';
       updateQuotes(quotes);
-      populateCategoryFilter();
+      populateCategories();
     }
   }
 
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   const categoryFilter = document.getElementById("categoryFilter");
 
   // Populate category filter
-  function populateCategoryFilter() {
+  function populateCategories() {
     const categories = [...new Set(quotes.map(quote => quote.category))];
     categoryFilter.innerHTML = '<option value="all">All Categories</option>';
     categories.forEach(category => {
@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
 
   // Initialize category filter and display all quotes
-  populateCategoryFilter();
+  populateCategories();
   filterQuotes();
 
 })
